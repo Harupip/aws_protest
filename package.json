@@ -9,10 +9,19 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "aws-amplify": "^6.6.0",
     "vue": "^3.4.37"
   },
   "devDependencies": {
+    "@aws-amplify/backend": "^1.2.1",
+    "@aws-amplify/backend-cli": "^1.2.5",
     "@vitejs/plugin-vue": "^5.1.2",
+    "aws-cdk": "^2.155.0",
+    "aws-cdk-lib": "^2.155.0",
+    "constructs": "^10.3.0",
+    "esbuild": "^0.23.1",
+    "tsx": "^4.19.0",
+    "typescript": "^5.5.4",
     "vite": "^5.4.1"
   }
 }
