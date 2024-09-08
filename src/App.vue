@@ -1,30 +1,39 @@
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'
-import { Authenticator } from "@aws-amplify/ui-vue";
-import "@aws-amplify/ui-vue/styles.css";
+import { signOut } from 'aws-amplify/auth';
+import { ref, onMounted } from 'vue';
+import { getCurrentUser } from 'aws-amplify/auth';
+import { useRouter } from 'vue-router';
 
-import { Amplify } from 'aws-amplify';
-import outputs from '../amplify_outputs.json';
+const router = useRouter();
+const isAuthenticated = ref(false);
 
-Amplify.configure(outputs);
+const checkAuthState = async () => {
+  try {
+    const user = await getCurrentUser();
+    isAuthenticated.value = true;
+  } catch {
+    isAuthenticated.value = false;
+  }
+};
+
+const logout = async () => {
+  try {
+    await signOut();
+    isAuthenticated.value = false;
+    router.push({ name: 'auth' });
+  } catch (error) {
+    console.error('Error signing out: ', error);
+  }
+};
+
+onMounted(() => {
+  checkAuthState();
+});
 </script>
 
 <template>
-  <authenticator>
-    <template v-slot="{ user, signOut }">
-      <h1>Hello {{ user.username }}!</h1>
-      <button @click="signOut">Sign Out</button>
-    </template>
-  </authenticator>
-  <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
-  </div>
-  <HelloWorld msg="Vite + Vue" />
+  <button v-if="isAuthenticated" @click="logout">Sign out</button>
+  <router-view></router-view>
 </template>
 
 <style scoped>
